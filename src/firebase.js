@@ -1,10 +1,6 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+import firebase from 'firebase';
+
 const firebaseConfig = {
   apiKey: "AIzaSyAkHB4jzc4NQLBqY4KWKEUI8GsK98RJuI8",
   authDomain: "netflix-clone-891dc.firebaseapp.com",
@@ -14,15 +10,9 @@ const firebaseConfig = {
   appId: "1:506479862282:web:1bf1d0fafe7c42549935f3"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const db = firebaseApp.firestore();
+const auth = firebase.auth();
 
-const db = getFirestore(app);
-
-// Get a list of cities from your database
-async function getCities(db) {
-  const citiesCol = collection(db, 'cities');
-  const citySnapshot = await getDocs(citiesCol);
-  const cityList = citySnapshot.docs.map(doc => doc.data());
-  return cityList;
-}
+export { auth };
+export default db;
