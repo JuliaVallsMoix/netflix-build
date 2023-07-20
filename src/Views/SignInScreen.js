@@ -2,30 +2,47 @@ import React, { useRef } from 'react';
 import './SignInScreen.css';
 import { auth } from '../firebase';
 import db from '../firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
 
 function SignInScreen() {
 
-    const emailRef = useRef(null);
-    const passwordRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
 
-    const register = (e) => {
-        e.preventDefault();
+  const register = async (e) => {
+    e.preventDefault();
 
-        auth.createUserWithEmailAndPassword(
-            emailRef.current.value,
-            passwordRef.current.value
-        )
-        .then((authUser) => {
-            console.log(authUser);
-        })
-        .catch((error) => {
-            alert(error.message);
-        });
-    };
+    const auth = getAuth();
 
-    const signIn = (e) => {
-        e.preventDefault();
-    };
+    createUserWithEmailAndPassword(
+      auth,
+      emailRef.current.value,
+      passwordRef.current.value
+    )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  const signIn = async (e) => {
+    e.preventDefault();
+
+    const auth = getAuth();
+
+    try {
+      const authUser = await signInWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value);
+
+      console.log(authUser);
+    }
+    catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className='signInScreen'>
@@ -36,8 +53,8 @@ function SignInScreen() {
         <button type='submit' onClick={signIn}>Sign In</button>
 
         <h4>
-            <span className='signInScreen__gray'>New to Netflix? </span> <span className='signInScreen__link' onClick={register}>Sign Up now.</span>
-            
+          <span className='signInScreen__gray'>New to Netflix? </span> <span className='signInScreen__link' onClick={register}>Sign Up now.</span>
+
         </h4>
       </form>
     </div>
